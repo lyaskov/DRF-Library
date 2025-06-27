@@ -1,3 +1,6 @@
+from datetime import date
+
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from books.models import Book
@@ -13,3 +16,14 @@ class Borrowing(models.Model):
 
     def __str__(self):
         return f"{self.user.email} borrowed {self.book.title}"
+
+    def clean(self):
+        if self.expected_return_date < date.today():
+            raise ValidationError("Expected return date cannot be in the past.")
+
+        if self.actual_return_date and self.actual_return_date < self.borrow_date:
+            raise ValidationError("Actual return date cannot be before borrow date.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
