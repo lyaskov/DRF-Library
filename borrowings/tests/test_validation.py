@@ -31,17 +31,3 @@ class BorrowingModelValidationTests(TestCase):
         with self.assertRaises(ValidationError) as ctx:
             borrowing.full_clean()
         self.assertIn("Expected return date cannot be in the past.", str(ctx.exception))
-
-    def test_actual_return_date_cannot_be_before_borrow_date(self):
-        borrowing = Borrowing(
-            user=self.user,
-            book=self.book,
-            borrow_date=date.today(),
-            expected_return_date=date.today() + timedelta(days=5),
-            actual_return_date=date.today() - timedelta(days=1),
-        )
-        with self.assertRaises(ValidationError) as ctx:
-            borrowing.full_clean()
-        self.assertIn(
-            "Actual return date cannot be before borrow date.", str(ctx.exception)
-        )

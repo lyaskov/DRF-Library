@@ -23,7 +23,7 @@ class BorrowingReadSerializer(serializers.ModelSerializer):
 class BorrowingCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Borrowing
-        fields = ("book", "expected_return_date")
+        fields = ("id", "book", "expected_return_date")
 
     def validate(self, attrs):
         book = attrs["book"]
