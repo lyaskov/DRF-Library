@@ -1,10 +1,9 @@
-from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APIClient
 
 from books.models import Book
 from books.serializers import BookSerializer
+from books.tests.base import AuthenticatedAPITestCase
 
 BOOKS_URL = reverse("books:book-list")
 
@@ -13,10 +12,9 @@ def detail_url(book_id):
     return reverse("books:book-detail", args=[book_id])
 
 
-class BookAPITestCase(TestCase):
+class BookAPITestCase(AuthenticatedAPITestCase):
 
     def setUp(self):
-        self.client = APIClient()
         self.book = Book.objects.create(
             title="The Great Gatsby",
             author="F. Scott Fitzgerald",
@@ -33,7 +31,7 @@ class BookAPITestCase(TestCase):
             "inventory": 3,
             "daily_fee": "2.99",
         }
-
+        self.authenticate_staff_user()
         res = self.client.post(BOOKS_URL, payload, format="json")
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
@@ -73,6 +71,7 @@ class BookAPITestCase(TestCase):
         url = detail_url(self.book.id)
         payload = {"inventory": 10}
 
+        self.authenticate_staff_user()
         res = self.client.patch(url, payload, format="json")
         self.book.refresh_from_db()
 
@@ -82,6 +81,7 @@ class BookAPITestCase(TestCase):
     def test_delete_book(self):
         url = detail_url(self.book.id)
 
+        self.authenticate_staff_user()
         res = self.client.delete(url)
 
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
