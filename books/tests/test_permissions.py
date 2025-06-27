@@ -16,6 +16,7 @@ def detail_url(book_id):
 
 class BookPermissionsTests(AuthenticatedAPITestCase):
     def setUp(self):
+        super().setUp()
         self.staff_user = self.get_staff_user()
         self.normal_user = self.get_normal_user()
         self.book = Book.objects.create(

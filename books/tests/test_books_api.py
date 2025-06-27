@@ -15,6 +15,7 @@ def detail_url(book_id):
 class BookAPITestCase(AuthenticatedAPITestCase):
 
     def setUp(self):
+        super().setUp()
         self.book = Book.objects.create(
             title="The Great Gatsby",
             author="F. Scott Fitzgerald",

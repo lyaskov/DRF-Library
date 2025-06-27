@@ -6,16 +6,17 @@ User = get_user_model()
 
 
 class AuthenticatedAPITestCase(APITestCase):
-    payload_staff_user = {
-        "email": "admin@example.com",
-        "password": "adminpass",
-        "is_staff": True,
-    }
-    payload_normal_user = {
-        "email": "user@example.com",
-        "password": "userpass",
-        "is_staff": False,
-    }
+    def setUp(self):
+        self.payload_staff_user = {
+            "email": "admin@example.com",
+            "password": "adminpass",
+            "is_staff": True,
+        }
+        self.payload_normal_user = {
+            "email": "user@example.com",
+            "password": "userpass",
+            "is_staff": False,
+        }
 
     def get_normal_user(self):
         user, created = User.objects.get_or_create(
